@@ -5,4 +5,16 @@
     <string name="action_settings">Settings</string>
     <string name="enter_ui">enterbook</string>
     <string name="exit_ui">exitbook</string>
+
+    <string-array name="ItemName">
+        <item>book1</item>
+        <item>book2</item>
+        <item>book3</item>
+        <item>book4</item>
+        <item>book5</item>
+        <item>book5</item>
+        <item>book7</item>
+        <item>book8</item>
+        <item>book8</item>
+    </string-array>
 </resources>

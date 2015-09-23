@@ -4,54 +4,61 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import com.example.zy.girddemo.OpenglAnim.Anim.EnterActivity;
-import com.example.zy.girddemo.OpenglAnim.Anim.ExitActivity;
-import com.example.zy.girddemo.OpenglAnim.OpenglUtil.LogMes;
-import com.example.zy.girddemo.View.BookGrid;
+import com.example.zy.girddemo.View.GridAdapater;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class MainActivity extends Activity {
 
-    private ArrayList<HashMap<String, Object>> lstImageItem;
+    private ArrayList<String> itemName;
+    private ArrayList<Integer> itemImages;
+    private GridAdapater gridAdapater;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         GridView gridview = (GridView) findViewById(R.id.bookGrid);
-
-        //生成动态数组，并且转入数据
-        lstImageItem = new ArrayList<HashMap<String, Object>>();
-        for (int i = 0; i < 10; i++) {
-            HashMap<String, Object> map = new HashMap<String, Object>();
-            map.put("ItemImage", R.mipmap.ic_launcher);//添加图像资源的ID
-            map.put("ItemText", "NO." + String.valueOf(i));//按序号做ItemText
-            lstImageItem.add(map);
-        }
+        initData();
         //生成适配器的ImageItem <====> 动态数组的元素，两者一一对应
-        SimpleAdapter saImageItems = new SimpleAdapter(this,
-                lstImageItem,//数据来源
-                R.layout.nitht_item,//night_item的XML实现
-
-                //动态数组与ImageItem对应的子项
-                new String[]{"ItemImage", "ItemText"},
-
-                //ImageItem的XML文件里面的一个ImageView,两个TextView ID
-                new int[]{R.id.bookCover, R.id.bookName});
-        //添加并且显示
-        gridview.setAdapter(saImageItems);
+        gridAdapater = new GridAdapater(this,itemName,itemImages);
+//        SimpleAdapter saImageItems = new SimpleAdapter(this,
+//                lstImageItem,//数据来源
+//                R.layout.nitht_item,//night_item的XML实现
+//
+//                //动态数组与ImageItem对应的子项
+//                new String[]{"ItemImage", "ItemText"},
+//
+//                //ImageItem的XML文件里面的一个ImageView,两个TextView ID
+//                new int[]{R.id.bookCover, R.id.bookName});
+//        //添加并且显示
+        gridview.setAdapter(gridAdapater);
         //添加消息处理
         gridview.setOnItemClickListener(new BookGridClick());
     }
 
+    public void initData() {
+        //生成动态数组，并且转入数据
+        itemName = new ArrayList<String>();
+        itemImages = new ArrayList<Integer>();
+        for (int i = 0; i < 10; i++) {
+           itemName.add(i,"NO." + String.valueOf(i));
+           itemImages.add(i,R.drawable.cover);
+       }
+
+//        for (int i = 0; i < 10; i++) {
+//            HashMap<String, Object> map = new HashMap<String, Object>();
+//            map.put("ItemImage", R.mipmap.ic_launcher);//添加图像资源的ID
+//            map.put("ItemText", "NO." + String.valueOf(i));//按序号做ItemText
+//            lstImageItem.add(map);
+//        }
+
+    }
 
     private  class BookGridClick implements AdapterView.OnItemClickListener{
 
