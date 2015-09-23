@@ -30,7 +30,7 @@ public class Texture {
     FileIO fileIO;
     private float width;
     private float height;
-
+    private int bookId;
     //封装了画笔和GLSufaceView
     GLGraphics glGraphics;
     Game game;
@@ -40,17 +40,23 @@ public class Texture {
         glGraphics = game.getGraphics();
     }
 
+    public Texture(Game game, int bookId) {
+        this.game = game;
+        this.bookId = bookId;
+        glGraphics = game.getGraphics();
+    }
+
     public  int loadTexture() {
         GL10 gl = glGraphics.getGl();
         textureIds = new int[1];
         InputStream in = null;
         try {
             fileIO = game.getFileIO();
-            in = fileIO.readAsset(filename);
+            in = fileIO.readAsset("ddddd");
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Bitmap bitmap = BitmapFactory.decodeResource(game.getContext().getResources(), R.mipmap.cover);
+        Bitmap bitmap = BitmapFactory.decodeResource(game.getContext().getResources(), bookId);
         if (bitmap == null) {
             LogMes.d("TAG", "=========bitmap is null,the file is error");
         } else {

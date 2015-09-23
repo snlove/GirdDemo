@@ -55,6 +55,27 @@ public class RectAngle extends Screen {
         backtices.setIndexsBuff(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
     }
 
+    public RectAngle(Game game, int bookId) {
+        super(game);
+        glGraphics = game.getGraphics();
+        vertices = new Vertices(glGraphics, 4, 6, false, true);
+        vertices.setVerticesbuff(new float[]{
+                0.0f, 0.0f, 0.0f, 1.0f,
+                1.0f, 0.0f, 1.0f, 1.0f,
+                1.0f, 1.0f, 1.0f, 0.0f,
+                0.0f, 1.0f, 0.0f, 0.0f}, 0, 16);
+        vertices.setIndexsBuff(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
+        texture = new Texture(game, bookId);
+        texId = texture.loadTexture();
+        backtices = new Vertices(glGraphics, 4, 6, true, false);
+        backtices.setVerticesbuff(new float[]{
+                0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+                1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+                1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+                0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,}, 0, 24);
+        backtices.setIndexsBuff(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
+    }
+
 
     //得到旋转的角度
     @Override

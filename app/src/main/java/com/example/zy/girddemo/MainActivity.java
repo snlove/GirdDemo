@@ -2,6 +2,7 @@ package com.example.zy.girddemo;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +19,7 @@ public class MainActivity extends Activity {
 
     private ArrayList<String> itemName;
     private ArrayList<Integer> itemImages;
+    private Integer[] imageId;
     private GridAdapater gridAdapater;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -46,10 +48,14 @@ public class MainActivity extends Activity {
         //生成动态数组，并且转入数据
         itemName = new ArrayList<String>();
         itemImages = new ArrayList<Integer>();
-        for (int i = 0; i < 10; i++) {
+        imageId = new Integer[]{R.mipmap.cover,R.mipmap.cover1,R.mipmap.cover2,
+                R.mipmap.cover3,R.mipmap.cover4,R.mipmap.cover5,
+                R.mipmap.cover6,R.mipmap.cover7,R.mipmap.cover8};
+        for (int i = 0; i < imageId.length; i++) {
            itemName.add(i,"NO." + String.valueOf(i));
-           itemImages.add(i,R.drawable.cover);
+            itemImages.add(i,imageId[i]);
        }
+
 
 //        for (int i = 0; i < 10; i++) {
 //            HashMap<String, Object> map = new HashMap<String, Object>();
@@ -76,6 +82,7 @@ public class MainActivity extends Activity {
 //            setTitle((String) item.get("ItemText"));
 //            Log.d("TAG","============"+ item.get("ItemText"));
             Intent i = new Intent(MainActivity.this, EnterActivity.class);
+            i.putExtra("bookCoverId",imageId[position]);
             startActivity(i);
             Log.d("TAG","=========Enter the Book Shelf");
         }
@@ -100,7 +107,9 @@ public class MainActivity extends Activity {
         Toast.makeText(this, "if you enter the back again,app exit", Toast.LENGTH_SHORT).show();
     }
 
-
+    public Integer[] getTexSrc() {
+        return  imageId;
+    }
 
 }
 

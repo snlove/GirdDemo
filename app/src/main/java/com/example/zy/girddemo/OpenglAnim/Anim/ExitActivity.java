@@ -11,13 +11,23 @@ import com.example.zy.girddemo.OpenglAnim.OpenglUtil.Screen;
 /**
  * Created by zy on 2015/9/22.
  */
-public class ExitActivity extends BasciScreen {
-
+public class ExitActivity extends BasciScreen implements ExitScreen.CallBackBook{
+    private  ExitScreen exitScreen;
     @Override
     public Screen getStartScreen() {
-        return new ExitScreen(this);
+        Intent i = getIntent();
+        int imagePostion = i.getExtras().getInt("BookId");
+        exitScreen = new ExitScreen(this,imagePostion);
+        exitScreen.setCallActi(this);
+        return exitScreen;
     }
 
 
-
+    @Override
+    public void reMain() {
+        Intent i = new Intent(ExitActivity.this,MainActivity.class);
+        startActivity(i);
+        ExitActivity.this.finish();
+        LogMes.d("ExitScreen", "==============Exti the Screen");
+    }
 }
