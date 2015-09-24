@@ -24,9 +24,9 @@ public class GridAdapater extends BaseAdapter {
     private Context context;
     private LayoutInflater inflater;
     private ArrayList<String> itemName;
-    private ArrayList<Integer> itemImages;
+    private ArrayList<Bitmap> itemImages;
 
-    public GridAdapater(Context context, ArrayList<String> itemName, ArrayList<Integer> itemImages) {
+    public GridAdapater(Context context, ArrayList<String> itemName, ArrayList<Bitmap> itemImages) {
         this.context = context;
         this.itemName = itemName;
         this.itemImages = itemImages;
@@ -61,7 +61,7 @@ public class GridAdapater extends BaseAdapter {
             viewItemTag = (ViewItemTag) convertView.getTag();
         }
 
-        viewItemTag.imageview.setBackgroundResource(itemImages.get(position));
+        viewItemTag.imageview.setImageBitmap(itemImages.get(position));
         viewItemTag.textView.setText(itemName.get(position));
         return convertView;
     }

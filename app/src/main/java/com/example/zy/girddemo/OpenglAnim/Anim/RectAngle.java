@@ -10,6 +10,7 @@ import com.example.zy.girddemo.OpenglAnim.OpenglUtil.Input;
 import com.example.zy.girddemo.OpenglAnim.OpenglUtil.LogMes;
 import com.example.zy.girddemo.OpenglAnim.OpenglUtil.Screen;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -23,8 +24,8 @@ public class RectAngle extends Screen {
     private float FrumViewWidth = 6.0f;
     private float FrumViewHeight = 6.0f;
     Vector2f cannon = new Vector2f(1.0f, 4.0f);
-    Vector2f moveDis = new Vector2f(2.0f, 2.0f);
-    Vector2f roattDis = new Vector2f(1.0f, 0.0f);
+    Vector2f moveDis ;
+    Vector2f roattDis = new Vector2f(0.5f, 0.0f);
     Vector2f touchPos = new Vector2f();
     GLGraphics glGraphics;
     Vertices vertices;
@@ -111,6 +112,7 @@ public class RectAngle extends Screen {
     public void present(float deltaTime) {
         GL10 gl = glGraphics.getGl();
         gl.glViewport(0, 0, glGraphics.getWidth(), glGraphics.getHeight());
+
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
         gl.glMatrixMode(GL10.GL_PROJECTION);
@@ -119,28 +121,19 @@ public class RectAngle extends Screen {
 
 
         //startAnimation = false;
-        float x = moveDis.x - cannon.x;
-        float y = moveDis.y - cannon.y;
+        float x = roattDis.x - moveDis.x;
+        float y = roattDis.y - moveDis.y;
         // 移动到指定位置
         // 移动到指定位置
-        if (j <= 21) {
-            gl.glPushMatrix();
-            gl.glMatrixMode(GL10.GL_MODELVIEW);
-            gl.glLoadIdentity();
-            texture.bindTexture();
-            gl.glTranslatef(cannon.x + x / 20 * j, cannon.y + y / 20 * j, 0.0f);
-            vertices.bind();
-            vertices.draw(GL10.GL_TRIANGLES, 0, vertices.getnumberSize());
-            vertices.unBind();
-            j++;
-        }
+
         //在给定位置进行打开动作,模拟书本翻页动作
-        else {
+
             if (stepXsmalle <= 180.0f) {
                 if(stepXsmalle<=60.0f) {
                     gl.glMatrixMode(GL10.GL_MODELVIEW);
                     gl.glLoadIdentity();
-                    gl.glTranslatef(moveDis.x - 1.0f / STOP_SCALE * k, moveDis.y - 2.0f / STOP_SCALE * k, 0);
+                    texture.bindTexture();
+                    gl.glTranslatef(moveDis.x + x / STOP_SCALE * k, moveDis.y + y / STOP_SCALE * k, 0);
                     gl.glScalef(1.0f + 4.0f / STOP_SCALE * k, 1.0f + 5.0f / STOP_SCALE * k, 0.0f);
                     //gl.glScalef(1.0f, 1.0f, 0.0f);
                     backtices.bind();
@@ -150,7 +143,7 @@ public class RectAngle extends Screen {
                     gl.glPushMatrix();
                     gl.glMatrixMode(GL10.GL_MODELVIEW);
                     gl.glLoadIdentity();
-                    gl.glTranslatef(moveDis.x - 1.5f / STOP_SCALE * k, moveDis.y - 2.0f / STOP_SCALE * k, 0);
+                    gl.glTranslatef(moveDis.x + x / STOP_SCALE * k, moveDis.y + y / STOP_SCALE * k, 0);
                     gl.glScalef(1.0f + 4.5f / STOP_SCALE * k, 1.0f + 5.0f / STOP_SCALE * k, 0.0f);
                     // gl.glScalef(1.0f, 1.0f, 0.0f);
                     gl.glRotatef(-stepXsmalle, 0, 1, 0);
@@ -158,12 +151,12 @@ public class RectAngle extends Screen {
                     vertices.draw(GL10.GL_TRIANGLES, 0, vertices.getnumberSize());
                     vertices.unBind();
                     gl.glPopMatrix();
-                    stepXsmalle += 3.0f;
+                    stepXsmalle += 0.3f;
                 }
                 if (stepXsmalle > 60.0f) {
                     gl.glMatrixMode(GL10.GL_MODELVIEW);
                     gl.glLoadIdentity();
-                    gl.glTranslatef(moveDis.x - 1.5f / STOP_SCALE * k, moveDis.y - 2.0f / STOP_SCALE * k, 0);
+                    gl.glTranslatef(moveDis.x + x / STOP_SCALE * k, moveDis.y + y / STOP_SCALE * k, 0);
                     gl.glScalef(1.0f + 4.5f / STOP_SCALE * k, 1.0f + 5.0f / STOP_SCALE * k, 0.0f);
                     //gl.glScalef(1.0f, 1.0f, 0.0f);
                     backtices.bind();
@@ -173,7 +166,7 @@ public class RectAngle extends Screen {
                     gl.glPushMatrix();
                     gl.glMatrixMode(GL10.GL_MODELVIEW);
                     gl.glLoadIdentity();
-                    gl.glTranslatef(moveDis.x - 1.5f / STOP_SCALE * k, moveDis.y - 2.0f / STOP_SCALE * k, 0);
+                    gl.glTranslatef(moveDis.x + x / STOP_SCALE * k, moveDis.y + y / STOP_SCALE * k, 0);
                     gl.glScalef(1.0f + 4.5f / STOP_SCALE * k, 1.0f + 5.0f / STOP_SCALE * k, 0.0f);
                     // gl.glScalef(1.0f, 1.0f, 0.0f);
                     gl.glRotatef(-stepXsmalle, 0, 1, 0);
@@ -184,7 +177,7 @@ public class RectAngle extends Screen {
                     stepXsmalle += 1.5f;
                 }
                 if (k < 20) {
-                    k++;
+                    k +=0.1;
                 } else {
                     k = 20;
                 }
@@ -199,7 +192,7 @@ public class RectAngle extends Screen {
                 vertices.draw(GL10.GL_TRIANGLES, 0, vertices.getnumberSize());
                 vertices.unBind();
             }
-        }
+
         gl.glPopMatrix();
         LogMes.d("Scale", "========let the squre scale");
 
@@ -218,5 +211,19 @@ public class RectAngle extends Screen {
     @Override
     public void dispose() {
 
+    }
+
+    public void setEnterPos(int postion) {
+        List<Vector2f> enterLists = new ArrayList<Vector2f>();
+        enterLists.add(0,new Vector2f(1.0f,5.0f));
+        enterLists.add(1,new Vector2f(3.0f,5.0f));
+        enterLists.add(2,new Vector2f(5.0f,5.0f));
+        enterLists.add(3,new Vector2f(1.0f,3.0f));
+        enterLists.add(4,new Vector2f(3.0f,3.0f));
+        enterLists.add(5,new Vector2f(5.0f,3.0f));
+        enterLists.add(6,new Vector2f(1.0f,0.0f));
+        enterLists.add(7,new Vector2f(3.0f,0.0f));
+        enterLists.add(8,new Vector2f(5.0f,0.0f));
+        moveDis = enterLists.get(postion);
     }
 }

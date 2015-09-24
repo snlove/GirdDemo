@@ -9,6 +9,8 @@ import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 
 
 import com.example.zy.girddemo.OpenglAnim.OpenglUtil.AndroidFileIO;
@@ -52,8 +54,8 @@ public abstract class BasciScreen extends Activity implements Game, Renderer {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         glView = new GLSurfaceView(this);
         glView.setRenderer(this);
+        glView.setZOrderOnTop(true);
         setContentView(glView);
-        
         glGraphics = new GLGraphics(glView);
          fileIO = new AndroidFileIO(getAssets());
 //        audio = new AndroidAudio(this);
@@ -74,7 +76,7 @@ public abstract class BasciScreen extends Activity implements Game, Renderer {
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {        
         glGraphics.setGl(gl);
-        
+        gl.glClearColor(1,1,1,0);
         synchronized(stateChanged) {
             if(state == GLGameState.Initialized)
                 screen = getStartScreen();
@@ -187,4 +189,6 @@ public abstract class BasciScreen extends Activity implements Game, Renderer {
     public Context getContext() {
         return context;
     }
+
+
 }

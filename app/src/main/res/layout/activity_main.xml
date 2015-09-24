@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/layout"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp"
+    android:background="#ff0000"
+    android:orientation="vertical"
+    >
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="书城"
+    android:textSize="20sp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:gravity="center_horizontal"
+    />
 <com.example.zy.girddemo.View.BookGrid
-       xmlns:android="http://schemas.android.com/apk/res/android"
        android:layout_width="match_parent"
        android:layout_height="match_parent"
        android:id="@+id/bookGrid"
@@ -11,6 +28,6 @@
        android:stretchMode="columnWidth"
        android:gravity="center"
        >
-   </com.example.zy.girddemo.View.BookGrid>
-
+</com.example.zy.girddemo.View.BookGrid>
+</LinearLayout>
 

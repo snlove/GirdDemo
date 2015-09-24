@@ -27,7 +27,7 @@ public class ExitScreen extends Screen {
     private float FrumViewWidth = 6.0f;
     private float FrumViewHeight = 6.0f;
     Vector2f cannon = new Vector2f(1.0f, 4.0f);
-    Vector2f moveDis = new Vector2f(2.0f, 2.0f);
+    Vector2f moveDis = new Vector2f(0.5f, 4.5f);
     Vector2f roattDis = new Vector2f(1.0f, 0.0f);
     Vector2f touchPos = new Vector2f();
     GLGraphics glGraphics;
@@ -111,8 +111,8 @@ public class ExitScreen extends Screen {
     float stepXsmalle = 180.0f;
     private static final int STOP_SCALE = 20;
     private static final float Scale_FACTOR = 3.0f;
-    float x = moveDis.x - cannon.x;
-    float y = moveDis.y - cannon.y;
+    float x = moveDis.x - roattDis.x;
+    float y = moveDis.y - roattDis.y;
 
     @Override
     public void present(float deltaTime) {
@@ -151,7 +151,7 @@ public class ExitScreen extends Screen {
 
                 gl.glMatrixMode(GL10.GL_MODELVIEW);
                 gl.glLoadIdentity();
-                gl.glTranslatef(roattDis.x + 1.0f / STOP_SCALE * k, roattDis.y + 2.0f / STOP_SCALE * k, 0);
+                gl.glTranslatef(roattDis.x + x / STOP_SCALE * k, roattDis.y + y / STOP_SCALE * k, 0);
                 gl.glScalef(5.0f - 4.0f / STOP_SCALE * k, 6.0f - 5.0f / STOP_SCALE * k, 0.0f);
                 backtices.bind();
                 backtices.draw(GL10.GL_TRIANGLES, 0, backtices.getnumberSize());
@@ -161,7 +161,7 @@ public class ExitScreen extends Screen {
                 gl.glPushMatrix();
                 gl.glMatrixMode(GL10.GL_MODELVIEW);
                 gl.glLoadIdentity();
-                gl.glTranslatef(roattDis.x + 1.0f / STOP_SCALE * k, roattDis.y + 2.0f / STOP_SCALE * k, 0);
+                gl.glTranslatef(roattDis.x + x / STOP_SCALE * k, roattDis.y + y / STOP_SCALE * k, 0);
                 gl.glScalef(5.0f - 4.0f / STOP_SCALE * k, 6.0f - 5.0f / STOP_SCALE * k, 0.0f);
                 gl.glRotatef(-stepXsmalle, 0, 1, 0);
                 vertices.bind();
@@ -174,7 +174,7 @@ public class ExitScreen extends Screen {
                 gl.glPushMatrix();
                 gl.glMatrixMode(GL10.GL_MODELVIEW);
                 gl.glLoadIdentity();
-                gl.glTranslatef(roattDis.x + 1.0f / STOP_SCALE * k, roattDis.y + 2.0f / STOP_SCALE * k, 0);
+                gl.glTranslatef(roattDis.x + x / STOP_SCALE * k, roattDis.y + y / STOP_SCALE * k, 0);
                 gl.glScalef(5.0f - 4.0f / STOP_SCALE * k, 6.0f - 5.0f / STOP_SCALE * k, 0.0f);
                 gl.glRotatef(-stepXsmalle, 0, 1, 0);
                 vertices.bind();
@@ -184,7 +184,7 @@ public class ExitScreen extends Screen {
 
                 gl.glMatrixMode(GL10.GL_MODELVIEW);
                 gl.glLoadIdentity();
-                gl.glTranslatef(roattDis.x + 1.0f / STOP_SCALE * k, roattDis.y + 2.0f / STOP_SCALE * k, 0);
+                gl.glTranslatef(roattDis.x + x / STOP_SCALE * k, roattDis.y + y / STOP_SCALE * k, 0);
                 gl.glScalef(5.0f - 4.0f / STOP_SCALE * k, 6.0f - 5.0f / STOP_SCALE * k, 0.0f);
                 backtices.bind();
                 backtices.draw(GL10.GL_TRIANGLES, 0, backtices.getnumberSize());

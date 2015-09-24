@@ -2,15 +2,19 @@ package com.example.zy.girddemo;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.zy.girddemo.OpenglAnim.Anim.EnterActivity;
+import com.example.zy.girddemo.Util.BitmapUtil;
 import com.example.zy.girddemo.View.GridAdapater;
 
 import java.util.ArrayList;
@@ -18,14 +22,17 @@ import java.util.ArrayList;
 public class MainActivity extends Activity {
 
     private ArrayList<String> itemName;
-    private ArrayList<Integer> itemImages;
+    private ArrayList<Bitmap> itemImages;
     private Integer[] imageId;
     private GridAdapater gridAdapater;
+    private GridView gridview;
+    private LinearLayout linearLayout;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        GridView gridview = (GridView) findViewById(R.id.bookGrid);
+        gridview = (GridView) findViewById(R.id.bookGrid);
+        linearLayout = (LinearLayout) findViewById(R.id.layout);
         initData();
         //生成适配器的ImageItem <====> 动态数组的元素，两者一一对应
         gridAdapater = new GridAdapater(this,itemName,itemImages);
@@ -47,13 +54,10 @@ public class MainActivity extends Activity {
     public void initData() {
         //生成动态数组，并且转入数据
         itemName = new ArrayList<String>();
-        itemImages = new ArrayList<Integer>();
-        imageId = new Integer[]{R.mipmap.cover,R.mipmap.cover1,R.mipmap.cover2,
-                R.mipmap.cover3,R.mipmap.cover4,R.mipmap.cover5,
-                R.mipmap.cover6,R.mipmap.cover7,R.mipmap.cover8};
-        for (int i = 0; i < imageId.length; i++) {
+        itemImages = BitmapUtil.loadThunmbnails(this.getResources(),200);
+
+        for (int i = 0; i < itemImages.size(); i++) {
            itemName.add(i,"NO." + String.valueOf(i));
-            itemImages.add(i,imageId[i]);
        }
 
 
@@ -82,9 +86,12 @@ public class MainActivity extends Activity {
 //            setTitle((String) item.get("ItemText"));
 //            Log.d("TAG","============"+ item.get("ItemText"));
             Intent i = new Intent(MainActivity.this, EnterActivity.class);
-            i.putExtra("bookCoverId",imageId[position]);
+            i.putExtra("bookCoverId",BitmapUtil.getBitmaoIndex(position));
+            i.putExtra("Postion", position);
+
             startActivity(i);
-            Log.d("TAG","=========Enter the Book Shelf");
+            overridePendingTransition(0,0);
+            Log.d("TAG", "=========Enter the Book Shelf");
         }
     }
 
