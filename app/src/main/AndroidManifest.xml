@@ -33,7 +33,9 @@
 
         <activity
             android:name=".OpenglAnim.Anim.ExitActivity"
-            android:label="@string/exit_ui" >
+            android:label="@string/exit_ui"
+            android:theme="@style/Transparent"
+            >
 
             <intent-filter>
                 <action android:name="android.intent.action.exit" />

@@ -28,8 +28,8 @@ public class ExitActivity extends BasciScreen implements ExitScreen.CallBackBook
     public void reMain() {
         Intent i = new Intent(ExitActivity.this,MainActivity.class);
         startActivity(i);
-        overridePendingTransition(R.anim.enter_main_again,R.anim.exit_exit);
         ExitActivity.this.finish();
+        overridePendingTransition(0,0);
         LogMes.d("TESTScreen", "==============Exti the Screen");
     }
 }
