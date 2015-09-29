@@ -26,4 +26,6 @@ public class BookGrid extends GridView {
     public BookGrid(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
+
+
 }

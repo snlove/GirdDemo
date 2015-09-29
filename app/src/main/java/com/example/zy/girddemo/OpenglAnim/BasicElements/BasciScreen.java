@@ -8,16 +8,13 @@ import android.opengl.GLSurfaceView.Renderer;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
-import android.view.Window;
-import android.view.WindowManager;
 
 
-import com.example.zy.girddemo.OpenglAnim.OpenglUtil.AndroidFileIO;
-import com.example.zy.girddemo.OpenglAnim.OpenglUtil.AndroidInput;
-import com.example.zy.girddemo.OpenglAnim.OpenglUtil.FileIO;
+import com.example.zy.girddemo.OpenglAnim.OpenglUtil.BasicUtil.AndroidFileIO;
+import com.example.zy.girddemo.OpenglAnim.OpenglUtil.BasicUtil.AndroidInput;
+import com.example.zy.girddemo.OpenglAnim.OpenglUtil.BasicUtil.FileIO;
 import com.example.zy.girddemo.OpenglAnim.OpenglUtil.GLGraphics;
 import com.example.zy.girddemo.OpenglAnim.OpenglUtil.Game;
-import com.example.zy.girddemo.OpenglAnim.OpenglUtil.Input;
 import com.example.zy.girddemo.OpenglAnim.OpenglUtil.Screen;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -35,7 +32,7 @@ public abstract class BasciScreen extends Activity implements Game, Renderer {
 
     GLSurfaceView glView;
     GLGraphics glGraphics;
-    Input input;
+    GLGraphics.Input input;
     FileIO fileIO;
     Screen screen;
     GLState state = GLState.Initialized;
@@ -155,7 +152,7 @@ public abstract class BasciScreen extends Activity implements Game, Renderer {
 
 
     @Override
-    public Input getInput() {
+    public GLGraphics.Input getInput() {
         return input;
     }
 

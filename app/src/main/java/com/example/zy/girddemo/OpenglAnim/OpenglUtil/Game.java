@@ -2,11 +2,13 @@ package com.example.zy.girddemo.OpenglAnim.OpenglUtil;
 
 import android.content.Context;
 
+import com.example.zy.girddemo.OpenglAnim.OpenglUtil.BasicUtil.FileIO;
+
 /**
  * Created by zy on 2015/9/1.
  */
 public interface Game {
-    public Input getInput();
+    public GLGraphics.Input getInput();
 
     public FileIO getFileIO();
 

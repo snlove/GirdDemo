@@ -1,9 +1,10 @@
-package com.example.zy.girddemo.OpenglAnim.OpenglUtil;
+package com.example.zy.girddemo.OpenglAnim.OpenglUtil.BasicUtil;
 
 import java.util.List;
 
 import android.view.View.OnTouchListener;
 
+import com.example.zy.girddemo.OpenglAnim.OpenglUtil.GLGraphics;
 
 
 public interface TouchHandler extends OnTouchListener {
@@ -13,5 +14,5 @@ public interface TouchHandler extends OnTouchListener {
     
     public int getTouchY(int pointer);
     
-    public List<Input.TouchEvent> getTouchEvents();
+    public List<GLGraphics.Input.TouchEvent> getTouchEvents();
 }

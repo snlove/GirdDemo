@@ -1,4 +1,4 @@
-package com.example.zy.girddemo.OpenglAnim.OpenglUtil;
+package com.example.zy.girddemo.OpenglAnim.OpenglUtil.BasicUtil;
 
 import java.io.IOException;
 import java.io.InputStream;

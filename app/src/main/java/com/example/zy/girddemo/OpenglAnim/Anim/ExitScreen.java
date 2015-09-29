@@ -1,20 +1,17 @@
 package com.example.zy.girddemo.OpenglAnim.Anim;
 
 
-import android.content.Intent;
+import android.content.Context;
+import android.util.DisplayMetrics;
+import android.view.WindowManager;
 
-import com.example.zy.girddemo.MainActivity;
-import com.example.zy.girddemo.OpenglAnim.BasicElements.BasciScreen;
 import com.example.zy.girddemo.OpenglAnim.BasicElements.Texture;
 import com.example.zy.girddemo.OpenglAnim.BasicElements.Vector2f;
 import com.example.zy.girddemo.OpenglAnim.BasicElements.Vertices;
 import com.example.zy.girddemo.OpenglAnim.OpenglUtil.GLGraphics;
 import com.example.zy.girddemo.OpenglAnim.OpenglUtil.Game;
-import com.example.zy.girddemo.OpenglAnim.OpenglUtil.Input;
-import com.example.zy.girddemo.OpenglAnim.OpenglUtil.LogMes;
 import com.example.zy.girddemo.OpenglAnim.OpenglUtil.Screen;
-
-import java.util.List;
+import com.example.zy.girddemo.R;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -26,44 +23,37 @@ public class ExitScreen extends Screen {
 
     private float FrumViewWidth = 6.0f;
     private float FrumViewHeight = 6.0f;
-    Vector2f cannon = new Vector2f(1.0f, 4.0f);
-    Vector2f moveDis = new Vector2f(0.5f, 4.5f);
-    Vector2f roattDis = new Vector2f(1.0f, 0.0f);
-    Vector2f touchPos = new Vector2f();
+    Vector2f moveDis = new Vector2f(FrumViewWidth*0.016f,FrumViewHeight*(1.0f- 0.424375f));
+    Vector2f roattDis = new Vector2f(FrumViewWidth*0.15f, 0.0f);
     GLGraphics glGraphics;
     Vertices vertices;
     Vertices backtices;
-    private boolean startAnimation = false;
     private Texture texture;
     private int texId;
-    private int returnMain = 1;
+    private Texture backTexture;
+    private int backId;
+    private int bookId;
     private  CallBackBook callBackBook;
+    private float viewXScale = 0.3228f;
+    private float viewYScale = 0.3206f;
+
 
     public ExitScreen(Game game) {
         super(game);
         glGraphics = game.getGraphics();
-        vertices = new Vertices(glGraphics, 4, 6, false, true);
-        vertices.setVerticesbuff(new float[]{
-                0.0f, 0.0f, 0.0f, 1.0f,
-                1.0f, 0.0f, 1.0f, 1.0f,
-                1.0f, 1.0f, 1.0f, 0.0f,
-                0.0f, 1.0f, 0.0f, 0.0f}, 0, 16);
-        vertices.setIndexsBuff(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
-        texture = new Texture(game, "bobargb8888.png");
-        texId = texture.loadTexture();
-        backtices = new Vertices(glGraphics, 4, 6, true, false);
-        backtices.setVerticesbuff(new float[]{
-                0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-                1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-                1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-                0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,}, 0, 24);
-        backtices.setIndexsBuff(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
+        initData();
 
     }
 
     public ExitScreen(Game game,int bookId) {
         super(game);
         glGraphics = game.getGraphics();
+        initData();
+        this.bookId = bookId;
+
+    }
+
+    private void initData() {
         vertices = new Vertices(glGraphics, 4, 6, false, true);
         vertices.setVerticesbuff(new float[]{
                 0.0f, 0.0f, 0.0f, 1.0f,
@@ -71,37 +61,35 @@ public class ExitScreen extends Screen {
                 1.0f, 1.0f, 1.0f, 0.0f,
                 0.0f, 1.0f, 0.0f, 0.0f}, 0, 16);
         vertices.setIndexsBuff(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
-        texture = new Texture(game, bookId);
-        texId = texture.loadTexture();
-        backtices = new Vertices(glGraphics, 4, 6, true, false);
+        backtices = new Vertices(glGraphics, 4, 6, false, true);
         backtices.setVerticesbuff(new float[]{
-                0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-                1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-                1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-                0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,}, 0, 24);
+                0.0f, 0.0f, 0.0f, 1.0f,
+                1.0f, 0.0f, 1.0f, 1.0f,
+                1.0f, 1.0f, 1.0f, 0.0f,
+                0.0f, 1.0f, 0.0f, 0.0f}, 0, 16);
         backtices.setIndexsBuff(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
+    }
 
+    private void initTex(String filename) {
+        texture = new Texture(game, filename);
+        texture.loadTexture();
+    }
+
+    private void initTex(int bookId) {
+        texture = new Texture(game, bookId);
+        texture.loadTexture();
+    }
+
+    private void intiBackTex(int recourceId) {
+        backTexture = new Texture(game,recourceId);
+        backTexture.loadTexture();
     }
 
     //得到旋转的角度
     @Override
     public void update(float deltaTime) {
-
-        List<Input.TouchEvent> touchEvents = game.getInput().getTouchEvents();
-        game.getInput().getKeyEvents();
-        LogMes.d("Cannon", "==================" + touchEvents.size());
-        int len = touchEvents.size();
-        for (int i = 0; i < len; i++) {
-            Input.TouchEvent event = touchEvents.get(i);
-            //世界坐标转换
-            touchPos.x = (event.x / (float) glGraphics.getWidth()) * FrumViewWidth;
-            touchPos.y = (1 - event.y / (float) glGraphics.getHeight()) * FrumViewHeight;
-
-        }
-        if (len > 0) {
-            startAnimation = true;
-        }
-
+         initTex(bookId);
+         intiBackTex(R.mipmap.book);
 
     }
 
@@ -128,45 +116,58 @@ public class ExitScreen extends Screen {
 
         if (stepXsmalle > 0.0f) {
             if (stepXsmalle == 180.0f) {
+                gl.glPushMatrix();
                 gl.glMatrixMode(GL10.GL_MODELVIEW);
                 gl.glLoadIdentity();
                 texture.bindTexture();
-                gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-                gl.glTranslatef(1.0f, 0.0f, 0);
-                gl.glScalef(5.0f, 6.0f, 0.0f);
+                gl.glTranslatef(FrumViewWidth*0.1f, 0.0f, 0);
+                gl.glScalef(FrumViewWidth*0.9f, FrumViewHeight, 0.0f);
                 gl.glRotatef(-stepXsmalle, 0, 1, 0);
                 vertices.bind();
                 vertices.draw(GL10.GL_TRIANGLES, 0, vertices.getnumberSize());
                 vertices.unBind();
-
-                gl.glMatrixMode(GL10.GL_MODELVIEW);
-                gl.glLoadIdentity();
-                gl.glTranslatef(1.0f, 0.0f, 0);
-                gl.glScalef(5.0f, 6.0f, 0.0f);
-                backtices.bind();
-                backtices.draw(GL10.GL_TRIANGLES, 0, backtices.getnumberSize());
-                backtices.unBind();
-            }
-            if (stepXsmalle <= 120.0f) {
-
-                gl.glMatrixMode(GL10.GL_MODELVIEW);
-                gl.glLoadIdentity();
-                gl.glTranslatef(roattDis.x + x / STOP_SCALE * k, roattDis.y + y / STOP_SCALE * k, 0);
-                gl.glScalef(5.0f - 4.0f / STOP_SCALE * k, 6.0f - 5.0f / STOP_SCALE * k, 0.0f);
-                backtices.bind();
-                backtices.draw(GL10.GL_TRIANGLES, 0, backtices.getnumberSize());
-                backtices.unBind();
+                texture.dispose();
                 gl.glPopMatrix();
 
                 gl.glPushMatrix();
                 gl.glMatrixMode(GL10.GL_MODELVIEW);
                 gl.glLoadIdentity();
+                backTexture.bindTexture();
+                gl.glTranslatef(FrumViewWidth*0.1f, 0.0f, 0);
+                gl.glScalef(FrumViewWidth*0.9f, FrumViewHeight, 0.0f);
+                backtices.bind();
+                backtices.draw(GL10.GL_TRIANGLES, 0, backtices.getnumberSize());
+                backtices.unBind();
+                backTexture.dispose();
+                gl.glPopMatrix();
+            }
+            if (stepXsmalle <= 120.0f) {
+
+                gl.glPushMatrix();
+                gl.glMatrixMode(GL10.GL_MODELVIEW);
+                gl.glLoadIdentity();
+                backTexture.bindTexture();
                 gl.glTranslatef(roattDis.x + x / STOP_SCALE * k, roattDis.y + y / STOP_SCALE * k, 0);
-                gl.glScalef(5.0f - 4.0f / STOP_SCALE * k, 6.0f - 5.0f / STOP_SCALE * k, 0.0f);
+                gl.glScalef(FrumViewWidth*0.9f - FrumViewWidth *(0.9f - viewXScale) / STOP_SCALE * k,
+                        FrumViewHeight - FrumViewHeight* ( 1.0f- viewYScale) / STOP_SCALE * k, 0.0f);
+                backtices.bind();
+                backtices.draw(GL10.GL_TRIANGLES, 0, backtices.getnumberSize());
+                backtices.unBind();
+                backTexture.dispose();
+                gl.glPopMatrix();
+
+                gl.glPushMatrix();
+                gl.glMatrixMode(GL10.GL_MODELVIEW);
+                gl.glLoadIdentity();
+                texture.bindTexture();
+                gl.glTranslatef(roattDis.x + x / STOP_SCALE * k, roattDis.y + y / STOP_SCALE * k, 0);
+                gl.glScalef(FrumViewWidth*0.9f - FrumViewWidth *(0.9f - viewXScale) / STOP_SCALE * k,
+                        FrumViewHeight - FrumViewHeight* ( 1.0f- viewYScale) / STOP_SCALE * k, 0.0f);
                 gl.glRotatef(-stepXsmalle, 0, 1, 0);
                 vertices.bind();
                 vertices.draw(GL10.GL_TRIANGLES, 0, vertices.getnumberSize());
                 vertices.unBind();
+                texture.dispose();
                 gl.glPopMatrix();
                 stepXsmalle -= 3.0f;
             }
@@ -174,27 +175,35 @@ public class ExitScreen extends Screen {
                 gl.glPushMatrix();
                 gl.glMatrixMode(GL10.GL_MODELVIEW);
                 gl.glLoadIdentity();
+                texture.bindTexture();
                 gl.glTranslatef(roattDis.x + x / STOP_SCALE * k, roattDis.y + y / STOP_SCALE * k, 0);
-                gl.glScalef(5.0f - 4.0f / STOP_SCALE * k, 6.0f - 5.0f / STOP_SCALE * k, 0.0f);
+                gl.glScalef(FrumViewWidth*0.9f - FrumViewWidth *(0.9f - viewXScale) / STOP_SCALE * k,
+                        FrumViewHeight - FrumViewHeight* ( 1.0f- viewYScale) / STOP_SCALE * k, 0.0f);
                 gl.glRotatef(-stepXsmalle, 0, 1, 0);
                 vertices.bind();
                 vertices.draw(GL10.GL_TRIANGLES, 0, vertices.getnumberSize());
                 vertices.unBind();
+                texture.dispose();
                 gl.glPopMatrix();
 
+                gl.glPushMatrix();
                 gl.glMatrixMode(GL10.GL_MODELVIEW);
                 gl.glLoadIdentity();
+                backTexture.bindTexture();
                 gl.glTranslatef(roattDis.x + x / STOP_SCALE * k, roattDis.y + y / STOP_SCALE * k, 0);
-                gl.glScalef(5.0f - 4.0f / STOP_SCALE * k, 6.0f - 5.0f / STOP_SCALE * k, 0.0f);
+                gl.glScalef(FrumViewWidth*0.9f - FrumViewWidth *(0.9f - viewXScale) / STOP_SCALE * k,
+                        FrumViewHeight - FrumViewHeight* ( 1.0f- viewYScale) / STOP_SCALE * k, 0.0f);
                 backtices.bind();
                 backtices.draw(GL10.GL_TRIANGLES, 0, backtices.getnumberSize());
                 backtices.unBind();
+                backTexture.dispose();
                 gl.glPopMatrix();
                 k++;
                 stepXsmalle -= 3.0f;
             }
 
-        } else {
+
+        }
 //                if (j <= 21) {
 //                    gl.glPushMatrix();
 //                    gl.glMatrixMode(GL10.GL_MODELVIEW);
@@ -221,10 +230,13 @@ public class ExitScreen extends Screen {
 //            vertices.bind();
 //            vertices.draw(GL10.GL_TRIANGLES, 0, vertices.getnumberSize());
 //            vertices.unBind();
+       else {
             callBackBook.reMain();
-
-
         }
+
+
+
+
 
 
     }
@@ -236,7 +248,6 @@ public class ExitScreen extends Screen {
 
     @Override
     public void resume() {
-        //returnMain = false;
     }
 
     @Override
@@ -244,7 +255,37 @@ public class ExitScreen extends Screen {
 
     }
 
+    /**
+     *
+     *
+     * @param scalex_FACTOR 左下角x占屏幕的比例
+     * @param scaley_FACTOR  左下角y占屏幕的比例
+     */
+    public void setEndPostion(float scalex_FACTOR,float scaley_FACTOR) {
+        moveDis.x = FrumViewWidth * scalex_FACTOR;
+        moveDis.y = FrumViewHeight * (1-scaley_FACTOR);
+    }
 
+
+    /**
+     * 设置显示屏幕的大小，根据一定比例进行缩放
+     * @param screen_FACTOR
+     */
+
+    public void setFrum(float screen_FACTOR) {
+        DisplayMetrics metrics = new DisplayMetrics();
+        WindowManager windowManager = (WindowManager) game.getContext().getSystemService(Context.WINDOW_SERVICE);
+        windowManager.getDefaultDisplay().getMetrics(metrics);
+        float screenWidth = metrics.widthPixels;
+        float screenHeight = metrics.heightPixels;
+        FrumViewWidth = screenWidth * screen_FACTOR;
+        FrumViewHeight = screenHeight * screen_FACTOR;
+    }
+
+    public void setEndScale(float viewXScale, float viewYScale) {
+        this.viewXScale = viewXScale;
+        this.viewYScale = viewYScale;
+    }
 
     public void setCallActi(CallBackBook callBackBook) {
         this.callBackBook = callBackBook;

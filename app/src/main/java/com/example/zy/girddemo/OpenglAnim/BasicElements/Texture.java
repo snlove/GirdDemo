@@ -5,11 +5,10 @@ import android.graphics.BitmapFactory;
 import android.opengl.GLUtils;
 
 
-import com.example.zy.girddemo.OpenglAnim.OpenglUtil.FileIO;
+import com.example.zy.girddemo.OpenglAnim.OpenglUtil.BasicUtil.FileIO;
 import com.example.zy.girddemo.OpenglAnim.OpenglUtil.GLGraphics;
 import com.example.zy.girddemo.OpenglAnim.OpenglUtil.Game;
 import com.example.zy.girddemo.OpenglAnim.OpenglUtil.LogMes;
-import com.example.zy.girddemo.R;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -31,7 +30,6 @@ public class Texture {
     private float width;
     private float height;
     private int bookId;
-    //封装了画笔和GLSufaceView
     GLGraphics glGraphics;
     Game game;
     public Texture(Game game,String filename) {
@@ -49,13 +47,13 @@ public class Texture {
     public  int loadTexture() {
         GL10 gl = glGraphics.getGl();
         textureIds = new int[1];
-        InputStream in = null;
-        try {
-            fileIO = game.getFileIO();
-            in = fileIO.readAsset("ddddd");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        InputStream in = null;
+//        try {
+//            fileIO = game.getFileIO();
+//            in = fileIO.readAsset("ddddd");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
         Bitmap bitmap = BitmapFactory.decodeResource(game.getContext().getResources(), bookId);
         if (bitmap == null) {
             LogMes.d("TAG", "=========bitmap is null,the file is error");

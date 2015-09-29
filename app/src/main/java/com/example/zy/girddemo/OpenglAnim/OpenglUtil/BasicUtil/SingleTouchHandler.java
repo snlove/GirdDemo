@@ -1,25 +1,27 @@
-package com.example.zy.girddemo.OpenglAnim.OpenglUtil;
+package com.example.zy.girddemo.OpenglAnim.OpenglUtil.BasicUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import android.view.MotionEvent;
 import android.view.View;
-import com.example.zy.girddemo.OpenglAnim.OpenglUtil.Input.TouchEvent;
+import com.example.zy.girddemo.OpenglAnim.OpenglUtil.GLGraphics.Input.TouchEvent;
+
+import com.example.zy.girddemo.OpenglAnim.OpenglUtil.GLGraphics;
 
 
 public class SingleTouchHandler implements TouchHandler {
     boolean isTouched;
     int touchX;
     int touchY;
-    Pool<Input.TouchEvent> touchEventPool;
-    List<Input.TouchEvent> touchEvents = new ArrayList<Input.TouchEvent>();
-    List<Input.TouchEvent> touchEventsBuffer = new ArrayList<Input.TouchEvent>();
+    Pool<GLGraphics.Input.TouchEvent> touchEventPool;
+    List<GLGraphics.Input.TouchEvent> touchEvents = new ArrayList<GLGraphics.Input.TouchEvent>();
+    List<GLGraphics.Input.TouchEvent> touchEventsBuffer = new ArrayList<GLGraphics.Input.TouchEvent>();
     float scaleX;
     float scaleY;
     
     public SingleTouchHandler(View view, float scaleX, float scaleY) {
-        Pool.PoolObjectFactory<TouchEvent> factory = new Pool.PoolObjectFactory<TouchEvent>() {
+        Pool.PoolObjectFactory<GLGraphics.Input.TouchEvent> factory = new Pool.PoolObjectFactory<TouchEvent>() {
             @Override
             public TouchEvent createObject() {
                 return new TouchEvent();

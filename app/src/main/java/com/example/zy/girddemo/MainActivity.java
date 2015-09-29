@@ -1,19 +1,27 @@
 package com.example.zy.girddemo;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.zy.girddemo.OpenglAnim.Anim.EnterActivity;
+import com.example.zy.girddemo.OpenglAnim.OpenglUtil.LogMes;
 import com.example.zy.girddemo.Util.BitmapUtil;
 import com.example.zy.girddemo.View.GridAdapater;
 
@@ -27,6 +35,8 @@ public class MainActivity extends Activity {
     private GridAdapater gridAdapater;
     private GridView gridview;
     private LinearLayout linearLayout;
+    private IntentFilter filter;
+    BroadcastReceiver broadcastReceiver;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,12 +59,21 @@ public class MainActivity extends Activity {
         gridview.setAdapter(gridAdapater);
         //添加消息处理
         gridview.setOnItemClickListener(new BookGridClick());
+        filter = new IntentFilter();
+        filter.addAction("BA");
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                gridview.smoothScrollToPosition(0);
+                Log.d("BA","============Receiver");
+            }
+        };
     }
 
     public void initData() {
         //生成动态数组，并且转入数据
         itemName = new ArrayList<String>();
-        itemImages = BitmapUtil.loadThunmbnails(this.getResources(),200);
+        itemImages = BitmapUtil.loadThunmbnails(this.getResources(),400);
 
         for (int i = 0; i < itemImages.size(); i++) {
            itemName.add(i,"NO." + String.valueOf(i));
@@ -85,13 +104,31 @@ public class MainActivity extends Activity {
 //            //显示所选Item的ItemText
 //            setTitle((String) item.get("ItemText"));
 //            Log.d("TAG","============"+ item.get("ItemText"));
+            DisplayMetrics metrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(metrics);
+            int screenWidth = metrics.widthPixels;
+            int screenHeight = metrics.heightPixels;
+            ImageView imageView = (ImageView) view.findViewById(R.id.bookCover);
+            int[] location = new int[2];
+            imageView.getLocationOnScreen(location);
+            int viewX = location[0];
+            int viewY = location[1] + imageView.getHeight();
+            int height = view.getHeight();
+            int width = view.getWidth();
+            float viewxXScale = (float)viewX/screenWidth;
+            float viewYScale = (float)viewY / screenHeight;
+            float heithtScale = (float)height/screenHeight;
+            float widthScale =  (float)width / screenWidth;
             Intent i = new Intent(MainActivity.this, EnterActivity.class);
-            i.putExtra("bookCoverId",BitmapUtil.getBitmaoIndex(position));
-            i.putExtra("Postion", position);
-
+            float[] postion = {viewxXScale,viewYScale};
+            Bundle b = new Bundle();
+            b.putFloatArray("PostionScale", postion);
+           i.putExtra("Postion", b);
+            i.putExtra("bookCoverId", BitmapUtil.getBitmaoIndex(position));
             startActivity(i);
-            overridePendingTransition(0,0);
+            overridePendingTransition(0, 0);
             Log.d("TAG", "=========Enter the Book Shelf");
+            LogMes.d("ScaleTag", "===========view" + viewYScale + "   " + viewY);
         }
     }
 
@@ -99,9 +136,17 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onResume() {
+        registerReceiver(broadcastReceiver,filter);
         super.onResume();
         // .... other stuff in my onResume ....
         this.doubleBackToExitPressedOnce = false;
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(broadcastReceiver);
     }
 
     @Override
@@ -114,9 +159,12 @@ public class MainActivity extends Activity {
         Toast.makeText(this, "if you enter the back again,app exit", Toast.LENGTH_SHORT).show();
     }
 
-    public Integer[] getTexSrc() {
-        return  imageId;
-    }
+   
+
+
+
+
+
 
 }
 

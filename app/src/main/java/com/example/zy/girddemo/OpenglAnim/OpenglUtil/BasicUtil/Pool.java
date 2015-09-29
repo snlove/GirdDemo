@@ -1,4 +1,4 @@
-package com.example.zy.girddemo.OpenglAnim.OpenglUtil;
+package com.example.zy.girddemo.OpenglAnim.OpenglUtil.BasicUtil;
 
 import java.util.ArrayList;
 import java.util.List;

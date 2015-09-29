@@ -1,13 +1,12 @@
 package com.example.zy.girddemo.OpenglAnim.Anim;
 
 import android.content.Intent;
-import android.view.KeyEvent;
+import android.os.Message;
 
 import com.example.zy.girddemo.MainActivity;
 import com.example.zy.girddemo.OpenglAnim.BasicElements.BasciScreen;
 import com.example.zy.girddemo.OpenglAnim.OpenglUtil.LogMes;
 import com.example.zy.girddemo.OpenglAnim.OpenglUtil.Screen;
-import com.example.zy.girddemo.R;
 
 /**
  * Created by zy on 2015/9/22.
@@ -26,6 +25,7 @@ public class ExitActivity extends BasciScreen implements ExitScreen.CallBackBook
 
     @Override
     public void reMain() {
+        sendBroadcast(new Intent("BA"));
         Intent i = new Intent(ExitActivity.this,MainActivity.class);
         startActivity(i);
         ExitActivity.this.finish();

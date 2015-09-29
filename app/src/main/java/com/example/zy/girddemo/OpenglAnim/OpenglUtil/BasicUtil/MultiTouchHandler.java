@@ -1,7 +1,9 @@
-package com.example.zy.girddemo.OpenglAnim.OpenglUtil;
+package com.example.zy.girddemo.OpenglAnim.OpenglUtil.BasicUtil;
 
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.example.zy.girddemo.OpenglAnim.OpenglUtil.GLGraphics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,20 +13,20 @@ public class MultiTouchHandler implements TouchHandler {
     boolean[] isTouched = new boolean[20];
     int[] touchX = new int[20];
     int[] touchY = new int[20];
-    Pool<Input.TouchEvent> touchEventPool;
-    List<Input.TouchEvent> touchEvents = new ArrayList<Input.TouchEvent>();
-    List<Input.TouchEvent> touchEventsBuffer = new ArrayList<Input.TouchEvent>();
+    Pool<GLGraphics.Input.TouchEvent> touchEventPool;
+    List<GLGraphics.Input.TouchEvent> touchEvents = new ArrayList<GLGraphics.Input.TouchEvent>();
+    List<GLGraphics.Input.TouchEvent> touchEventsBuffer = new ArrayList<GLGraphics.Input.TouchEvent>();
     float scaleX;
     float scaleY;
 
     public MultiTouchHandler(View view, float scaleX, float scaleY) {
-        Pool.PoolObjectFactory<Input.TouchEvent> factory = new Pool.PoolObjectFactory<Input.TouchEvent>() {
+        Pool.PoolObjectFactory<GLGraphics.Input.TouchEvent> factory = new Pool.PoolObjectFactory<GLGraphics.Input.TouchEvent>() {
             @Override
-            public Input.TouchEvent createObject() {
-                return new Input.TouchEvent();
+            public GLGraphics.Input.TouchEvent createObject() {
+                return new GLGraphics.Input.TouchEvent();
             }
         };
-        touchEventPool = new Pool<Input.TouchEvent>(factory, 100);
+        touchEventPool = new Pool<GLGraphics.Input.TouchEvent>(factory, 100);
         view.setOnTouchListener(this);
 
         this.scaleX = scaleX;
@@ -37,13 +39,13 @@ public class MultiTouchHandler implements TouchHandler {
             int action = event.getAction() & MotionEvent.ACTION_MASK;
             int pointerIndex = (event.getAction() & MotionEvent.ACTION_POINTER_ID_MASK) >> MotionEvent.ACTION_POINTER_ID_SHIFT;
             int pointerId = event.getPointerId(pointerIndex);
-            Input.TouchEvent touchEvent;
+            GLGraphics.Input.TouchEvent touchEvent;
 
             switch (action) {
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_POINTER_DOWN:
                 touchEvent = touchEventPool.newObject();
-                touchEvent.type = Input.TouchEvent.TOUCH_DOWN;
+                touchEvent.type = GLGraphics.Input.TouchEvent.TOUCH_DOWN;
                 touchEvent.pointer = pointerId;
                 touchEvent.x = touchX[pointerId] = (int) (event
                         .getX(pointerIndex) * scaleX);
@@ -57,7 +59,7 @@ public class MultiTouchHandler implements TouchHandler {
             case MotionEvent.ACTION_POINTER_UP:
             case MotionEvent.ACTION_CANCEL:
                 touchEvent = touchEventPool.newObject();
-                touchEvent.type = Input.TouchEvent.TOUCH_UP;
+                touchEvent.type = GLGraphics.Input.TouchEvent.TOUCH_UP;
                 touchEvent.pointer = pointerId;
                 touchEvent.x = touchX[pointerId] = (int) (event
                         .getX(pointerIndex) * scaleX);
@@ -74,7 +76,7 @@ public class MultiTouchHandler implements TouchHandler {
                     pointerId = event.getPointerId(pointerIndex);
 
                     touchEvent = touchEventPool.newObject();
-                    touchEvent.type = Input.TouchEvent.TOUCH_DRAGGED;
+                    touchEvent.type = GLGraphics.Input.TouchEvent.TOUCH_DRAGGED;
                     touchEvent.pointer = pointerId;
                     touchEvent.x = touchX[pointerId] = (int) (event
                             .getX(pointerIndex) * scaleX);
@@ -120,7 +122,7 @@ public class MultiTouchHandler implements TouchHandler {
     }
 
     @Override
-    public List<Input.TouchEvent> getTouchEvents() {
+    public List<GLGraphics.Input.TouchEvent> getTouchEvents() {
         synchronized (this) {
             int len = touchEvents.size();
             for (int i = 0; i < len; i++)

@@ -1,6 +1,7 @@
 package com.example.zy.girddemo.OpenglAnim.Anim;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.KeyEvent;
 
 import com.example.zy.girddemo.OpenglAnim.BasicElements.BasciScreen;
@@ -17,10 +18,11 @@ public class EnterActivity extends BasciScreen {
     public Screen getStartScreen() {
         Intent receiveId = getIntent();
         imagerPostion = receiveId.getExtras().getInt("bookCoverId");
-        int postion = receiveId.getExtras().getInt("Postion");
+        Bundle b = receiveId.getBundleExtra("Postion");
+        float[] postion = b.getFloatArray("PostionScale");
         LogMes.d("BOOKTAG", "=====================" + imagerPostion);
         enterScreen = new EnterScreen(this,imagerPostion);
-        enterScreen.setEnterPos(postion);
+        enterScreen.setEnterPos(postion[0],postion[1]);
         return enterScreen;
     }
 
@@ -32,6 +34,9 @@ public class EnterActivity extends BasciScreen {
             intent.setClass(EnterActivity.this, ExitActivity.class);
             startActivity(intent);
             EnterActivity.this.finish();
+            overridePendingTransition(0,0);
+//            ExitScreen exitScreen = new ExitScreen(this,imagerPostion);
+//            this.setScreen(exitScreen);
             LogMes.d("TESTScreen", "==============Enter the Screen");
         }
         return false;
