@@ -85,7 +85,7 @@ public class ExitScreen extends Screen {
         backTexture.loadTexture();
     }
 
-    //得到旋转的角度
+    //更新纹理
     @Override
     public void update(float deltaTime) {
          initTex(bookId);
@@ -141,7 +141,7 @@ public class ExitScreen extends Screen {
                 backTexture.dispose();
                 gl.glPopMatrix();
             }
-            if (stepXsmalle <= 120.0f) {
+            if (stepXsmalle <= 60.0f) {
 
                 gl.glPushMatrix();
                 gl.glMatrixMode(GL10.GL_MODELVIEW);
@@ -171,14 +171,14 @@ public class ExitScreen extends Screen {
                 gl.glPopMatrix();
                 stepXsmalle -= 3.0f;
             }
-            if (stepXsmalle > 120.0f && stepXsmalle <= 180.0f) {
+            if (stepXsmalle >60.0f && stepXsmalle <= 180.0f) {
                 gl.glPushMatrix();
                 gl.glMatrixMode(GL10.GL_MODELVIEW);
                 gl.glLoadIdentity();
                 texture.bindTexture();
                 gl.glTranslatef(roattDis.x + x / STOP_SCALE * k, roattDis.y + y / STOP_SCALE * k, 0);
-                gl.glScalef(FrumViewWidth*0.9f - FrumViewWidth *(0.9f - viewXScale) / STOP_SCALE * k,
-                        FrumViewHeight - FrumViewHeight* ( 1.0f- viewYScale) / STOP_SCALE * k, 0.0f);
+                gl.glScalef(FrumViewWidth * 0.9f - FrumViewWidth * (0.9f - viewXScale) / STOP_SCALE * k,
+                        FrumViewHeight - FrumViewHeight * (1.0f - viewYScale) / STOP_SCALE * k, 0.0f);
                 gl.glRotatef(-stepXsmalle, 0, 1, 0);
                 vertices.bind();
                 vertices.draw(GL10.GL_TRIANGLES, 0, vertices.getnumberSize());
@@ -191,15 +191,15 @@ public class ExitScreen extends Screen {
                 gl.glLoadIdentity();
                 backTexture.bindTexture();
                 gl.glTranslatef(roattDis.x + x / STOP_SCALE * k, roattDis.y + y / STOP_SCALE * k, 0);
-                gl.glScalef(FrumViewWidth*0.9f - FrumViewWidth *(0.9f - viewXScale) / STOP_SCALE * k,
-                        FrumViewHeight - FrumViewHeight* ( 1.0f- viewYScale) / STOP_SCALE * k, 0.0f);
+                gl.glScalef(FrumViewWidth * 0.9f - FrumViewWidth * (0.9f - viewXScale) / STOP_SCALE * k,
+                        FrumViewHeight - FrumViewHeight * (1.0f - viewYScale) / STOP_SCALE * k, 0.0f);
                 backtices.bind();
                 backtices.draw(GL10.GL_TRIANGLES, 0, backtices.getnumberSize());
                 backtices.unBind();
                 backTexture.dispose();
                 gl.glPopMatrix();
                 k++;
-                stepXsmalle -= 3.0f;
+                stepXsmalle -= 6.0f;
             }
 
 

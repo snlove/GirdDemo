@@ -124,7 +124,7 @@ public class EnterScreen extends Screen {
         //在给定位置进行打开动作,模拟书本翻页动作
 
         if (roateAngle <= 180.0f) {
-            if (roateAngle <= 60.0f) {
+            if (roateAngle < 120.0f) {
                 gl.glMatrixMode(GL10.GL_MODELVIEW);
                 gl.glLoadIdentity();
                 backTexture.bindTexture();
@@ -151,9 +151,9 @@ public class EnterScreen extends Screen {
                 vertices.unBind();
                 texture.dispose();
                 gl.glPopMatrix();
-                roateAngle += 3f;
+                roateAngle += 6f;
             }
-            if (roateAngle > 60.0f) {
+            if (roateAngle >=120.0f) {
 
                 gl.glMatrixMode(GL10.GL_MODELVIEW);
                 gl.glLoadIdentity();
@@ -181,7 +181,7 @@ public class EnterScreen extends Screen {
                 vertices.unBind();
                 texture.dispose();
                 gl.glPopMatrix();
-                roateAngle += 1.5f;
+                roateAngle += 6f;
             }
             if (k < 20) {
                 k++;

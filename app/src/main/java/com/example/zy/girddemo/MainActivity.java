@@ -10,6 +10,10 @@ import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
+import android.os.Message;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +27,7 @@ import android.widget.Toast;
 import com.example.zy.girddemo.OpenglAnim.Anim.EnterActivity;
 import com.example.zy.girddemo.OpenglAnim.OpenglUtil.LogMes;
 import com.example.zy.girddemo.Util.BitmapUtil;
+import com.example.zy.girddemo.Util.Constant;
 import com.example.zy.girddemo.View.GridAdapater;
 
 import java.util.ArrayList;
@@ -37,6 +42,7 @@ public class MainActivity extends Activity {
     private LinearLayout linearLayout;
     private IntentFilter filter;
     BroadcastReceiver broadcastReceiver;
+    MyHandler myHandler;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +51,7 @@ public class MainActivity extends Activity {
         linearLayout = (LinearLayout) findViewById(R.id.layout);
         initData();
         //生成适配器的ImageItem <====> 动态数组的元素，两者一一对应
-        gridAdapater = new GridAdapater(this,itemName,itemImages);
+        gridAdapater = new GridAdapater(this, itemName, itemImages);
 //        SimpleAdapter saImageItems = new SimpleAdapter(this,
 //                lstImageItem,//数据来源
 //                R.layout.nitht_item,//night_item的XML实现
@@ -59,25 +65,17 @@ public class MainActivity extends Activity {
         gridview.setAdapter(gridAdapater);
         //添加消息处理
         gridview.setOnItemClickListener(new BookGridClick());
-        filter = new IntentFilter();
-        filter.addAction("BA");
-        broadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                gridview.smoothScrollToPosition(0);
-                Log.d("BA","============Receiver");
-            }
-        };
+        myHandler = new MyHandler();
     }
 
     public void initData() {
         //生成动态数组，并且转入数据
         itemName = new ArrayList<String>();
-        itemImages = BitmapUtil.loadThunmbnails(this.getResources(),400);
+        itemImages = BitmapUtil.loadThunmbnails(this.getResources(), 400);
 
         for (int i = 0; i < itemImages.size(); i++) {
-           itemName.add(i,"NO." + String.valueOf(i));
-       }
+            itemName.add(i, "NO." + String.valueOf(i));
+        }
 
 
 //        for (int i = 0; i < 10; i++) {
@@ -89,10 +87,11 @@ public class MainActivity extends Activity {
 
     }
 
-    private  class BookGridClick implements AdapterView.OnItemClickListener{
+    private class BookGridClick implements AdapterView.OnItemClickListener {
 
         /**
-         *  当AdapterView被单击(触摸屏或者键盘)，则返回的Item单击事件
+         * 当AdapterView被单击(触摸屏或者键盘)，则返回的Item单击事件
+         *
          * @param parent
          * @param view
          * @param position
@@ -108,6 +107,14 @@ public class MainActivity extends Activity {
             getWindowManager().getDefaultDisplay().getMetrics(metrics);
             int screenWidth = metrics.widthPixels;
             int screenHeight = metrics.heightPixels;
+            final Message message = myHandler.obtainMessage();
+            message.arg1 = 1;
+            myHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    myHandler.sendMessage(message);
+                }
+            },2000);
             ImageView imageView = (ImageView) view.findViewById(R.id.bookCover);
             int[] location = new int[2];
             imageView.getLocationOnScreen(location);
@@ -115,15 +122,15 @@ public class MainActivity extends Activity {
             int viewY = location[1] + imageView.getHeight();
             int height = view.getHeight();
             int width = view.getWidth();
-            float viewxXScale = (float)viewX/screenWidth;
-            float viewYScale = (float)viewY / screenHeight;
-            float heithtScale = (float)height/screenHeight;
-            float widthScale =  (float)width / screenWidth;
+            float viewxXScale = (float) viewX / screenWidth;
+            float viewYScale = (float) viewY / screenHeight;
+            float heithtScale = (float) height / screenHeight;
+            float widthScale = (float) width / screenWidth;
             Intent i = new Intent(MainActivity.this, EnterActivity.class);
-            float[] postion = {viewxXScale,viewYScale};
+            float[] postion = {viewxXScale, viewYScale};
             Bundle b = new Bundle();
             b.putFloatArray("PostionScale", postion);
-           i.putExtra("Postion", b);
+            i.putExtra("Postion", b);
             i.putExtra("bookCoverId", BitmapUtil.getBitmaoIndex(position));
             startActivity(i);
             overridePendingTransition(0, 0);
@@ -136,7 +143,6 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onResume() {
-        registerReceiver(broadcastReceiver,filter);
         super.onResume();
         // .... other stuff in my onResume ....
         this.doubleBackToExitPressedOnce = false;
@@ -146,7 +152,6 @@ public class MainActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(broadcastReceiver);
     }
 
     @Override
@@ -159,10 +164,21 @@ public class MainActivity extends Activity {
         Toast.makeText(this, "if you enter the back again,app exit", Toast.LENGTH_SHORT).show();
     }
 
-   
+    class MyHandler extends  Handler{
+        public MyHandler(){
+            super();
+        }
 
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.arg1 == 1){
+                gridview.setSelection(0);
+                LogMes.d(Constant.TAG, "=======action" + msg.arg1);
+                super.handleMessage(msg);
+            }
 
-
+        }
+    }
 
 
 
