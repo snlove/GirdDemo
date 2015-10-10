@@ -17,7 +17,15 @@ public class ExitActivity extends BasciScreen implements ExitScreen.CallBackBook
     public Screen getStartScreen() {
         Intent i = getIntent();
         int imagePostion = i.getExtras().getInt("BookId");
+        float[] scale = i.getExtras().getFloatArray("Scale");
+        float[] firstPos = i.getExtras().getFloatArray("FirstPos");
         exitScreen = new ExitScreen(this,imagePostion);
+        if(scale != null) {
+            exitScreen.setEndScale(scale[0], scale[1]);
+        }
+        if(firstPos!=null) {
+            exitScreen.setEndPostion(firstPos[0], firstPos[1]);
+        }
         exitScreen.setCallActi(this);
         return exitScreen;
     }
@@ -25,7 +33,6 @@ public class ExitActivity extends BasciScreen implements ExitScreen.CallBackBook
 
     @Override
     public void reMain() {
-        sendBroadcast(new Intent("BA"));
         Intent i = new Intent(ExitActivity.this,MainActivity.class);
         startActivity(i);
         ExitActivity.this.finish();

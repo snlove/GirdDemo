@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory;
 import android.opengl.GLUtils;
 
 
-import com.example.zy.girddemo.OpenglAnim.OpenglUtil.BasicUtil.FileIO;
 import com.example.zy.girddemo.OpenglAnim.OpenglUtil.GLGraphics;
 import com.example.zy.girddemo.OpenglAnim.OpenglUtil.Game;
 import com.example.zy.girddemo.OpenglAnim.OpenglUtil.LogMes;
@@ -26,7 +25,6 @@ public class Texture {
     private int[] textureIds;
     int minFliter;
     int magFliter;
-    FileIO fileIO;
     private float width;
     private float height;
     private int bookId;
@@ -71,17 +69,17 @@ public class Texture {
         return  textureId;
     }
 
-    public InputStream getFile() {
-        InputStream in = null;
-        try {
-            in = fileIO.readAsset(filename);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return  in;
-    }
+//    public InputStream getFile() {
+//        InputStream in = null;
+//        try {
+//            in = fileIO.readAsset(filename);
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return  in;
+//    }
 
     public  void setFliters(int minFliter, int magFliter) {
         this.magFliter = magFliter;

@@ -1,27 +1,19 @@
 package com.example.zy.girddemo;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Looper;
 import android.os.Message;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.zy.girddemo.OpenglAnim.Anim.EnterActivity;
@@ -72,6 +64,7 @@ public class MainActivity extends Activity {
         //生成动态数组，并且转入数据
         itemName = new ArrayList<String>();
         itemImages = BitmapUtil.loadThunmbnails(this.getResources(), 400);
+        LogMes.d("TAGPOS","=========ImageX :"+ itemImages.get(1).getWidth() + "ImageH" + itemImages.get(1).getHeight());
 
         for (int i = 0; i < itemImages.size(); i++) {
             itemName.add(i, "NO." + String.valueOf(i));
@@ -99,14 +92,13 @@ public class MainActivity extends Activity {
          */
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//            HashMap<String, Object> item = (HashMap<String, Object>) parent.getItemAtPosition(position);
-//            //显示所选Item的ItemText
-//            setTitle((String) item.get("ItemText"));
-//            Log.d("TAG","============"+ item.get("ItemText"));
-            DisplayMetrics metrics = new DisplayMetrics();
-            getWindowManager().getDefaultDisplay().getMetrics(metrics);
-            int screenWidth = metrics.widthPixels;
-            int screenHeight = metrics.heightPixels;
+
+            Rect appRect = new Rect();
+            getWindow().getDecorView().getWindowVisibleDisplayFrame(appRect);
+            int screenWidth = appRect.width();
+            int screenHeight = appRect.height();
+
+            //更新gridV
             final Message message = myHandler.obtainMessage();
             message.arg1 = 1;
             myHandler.postDelayed(new Runnable() {
@@ -115,27 +107,43 @@ public class MainActivity extends Activity {
                     myHandler.sendMessage(message);
                 }
             },2000);
+
+            //得到屏幕中占的比例，进行坐标转换
             ImageView imageView = (ImageView) view.findViewById(R.id.bookCover);
             int[] location = new int[2];
             imageView.getLocationOnScreen(location);
             int viewX = location[0];
-            int viewY = location[1] + imageView.getHeight();
-            int height = view.getHeight();
-            int width = view.getWidth();
+            int viewY = location[1];
+            int height = imageView.getHeight();
+            int width = imageView.getWidth();
             float viewxXScale = (float) viewX / screenWidth;
-            float viewYScale = (float) viewY / screenHeight;
-            float heithtScale = (float) height / screenHeight;
-            float widthScale = (float) width / screenWidth;
+            float viewYScale = (float) (viewY - appRect.top)/ screenHeight;
+            float heithtScale = (float) 400 / screenHeight;
+            float widthScale = (float) 200 / screenWidth;
+
+            //回到初始位置的坐标
+            int[] firstPos = getFirItemPos();
+            int firstX = firstPos[0];
+            int firstY = firstPos[1]  ;
+            float firstXScale = (float) (viewX) / screenWidth;
+            float firstYScale = (float) (viewY - appRect.top ) / screenHeight;
+            float[] fristscale = {firstXScale,firstYScale};
+
+            //传递数据
             Intent i = new Intent(MainActivity.this, EnterActivity.class);
             float[] postion = {viewxXScale, viewYScale};
+            float[] scale = {widthScale, heithtScale};
             Bundle b = new Bundle();
             b.putFloatArray("PostionScale", postion);
+            b.putFloatArray("ViewScale", scale);
+            b.putFloatArray("FirstPostion", fristscale);
             i.putExtra("Postion", b);
             i.putExtra("bookCoverId", BitmapUtil.getBitmaoIndex(position));
             startActivity(i);
             overridePendingTransition(0, 0);
-            Log.d("TAG", "=========Enter the Book Shelf");
-            LogMes.d("ScaleTag", "===========view" + viewYScale + "   " + viewY);
+            LogMes.d("TAGPOS", "=========viewX :" + viewX + "viewY" + viewY);
+            LogMes.d("TAGPOS","=========width :"+ width + "height" + height);
+            LogMes.d("TAGPOS","========="+ appRect.top);
         }
     }
 
@@ -144,15 +152,10 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        // .... other stuff in my onResume ....
         this.doubleBackToExitPressedOnce = false;
 
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
 
     @Override
     public void onBackPressed() {
@@ -162,6 +165,15 @@ public class MainActivity extends Activity {
         }
         this.doubleBackToExitPressedOnce = true;
         Toast.makeText(this, "if you enter the back again,app exit", Toast.LENGTH_SHORT).show();
+    }
+
+
+    //得到第一个图片的位置
+    private int[] getFirItemPos() {
+
+         Bitmap bitmap= itemImages.get(0);
+        int[] fristPostion  = {bitmap.getWidth(),bitmap.getHeight()};
+        return  fristPostion;
     }
 
     class MyHandler extends  Handler{

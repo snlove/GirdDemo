@@ -2,7 +2,9 @@ package com.example.zy.girddemo.OpenglAnim.Anim;
 
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.util.DisplayMetrics;
+import android.view.Window;
 import android.view.WindowManager;
 
 import com.example.zy.girddemo.OpenglAnim.BasicElements.Texture;
@@ -10,6 +12,7 @@ import com.example.zy.girddemo.OpenglAnim.BasicElements.Vector2f;
 import com.example.zy.girddemo.OpenglAnim.BasicElements.Vertices;
 import com.example.zy.girddemo.OpenglAnim.OpenglUtil.GLGraphics;
 import com.example.zy.girddemo.OpenglAnim.OpenglUtil.Game;
+import com.example.zy.girddemo.OpenglAnim.OpenglUtil.LogMes;
 import com.example.zy.girddemo.OpenglAnim.OpenglUtil.Screen;
 import com.example.zy.girddemo.R;
 
@@ -23,8 +26,8 @@ public class ExitScreen extends Screen {
 
     private float FrumViewWidth = 6.0f;
     private float FrumViewHeight = 6.0f;
-    Vector2f moveDis = new Vector2f(FrumViewWidth*0.016f,FrumViewHeight*(1.0f- 0.424375f));
-    Vector2f roattDis = new Vector2f(FrumViewWidth*0.15f, 0.0f);
+    Vector2f moveDis;
+    Vector2f roattDis;
     GLGraphics glGraphics;
     Vertices vertices;
     Vertices backtices;
@@ -41,6 +44,7 @@ public class ExitScreen extends Screen {
     public ExitScreen(Game game) {
         super(game);
         glGraphics = game.getGraphics();
+        setFrum(1.0f);
         initData();
 
     }
@@ -48,6 +52,7 @@ public class ExitScreen extends Screen {
     public ExitScreen(Game game,int bookId) {
         super(game);
         glGraphics = game.getGraphics();
+        setFrum(1.0f);
         initData();
         this.bookId = bookId;
 
@@ -56,17 +61,17 @@ public class ExitScreen extends Screen {
     private void initData() {
         vertices = new Vertices(glGraphics, 4, 6, false, true);
         vertices.setVerticesbuff(new float[]{
-                0.0f, 0.0f, 0.0f, 1.0f,
-                1.0f, 0.0f, 1.0f, 1.0f,
-                1.0f, 1.0f, 1.0f, 0.0f,
-                0.0f, 1.0f, 0.0f, 0.0f}, 0, 16);
+                0.0f, 0.0f, 0.0f, 0.0f,
+                0.0f, 1.0f, 0.0f, 1.0f,
+                1.0f, 1.0f, 1.0f, 1.0f,
+                1.0f, 0.0f, 1.0f, 0.0f}, 0, 16);
         vertices.setIndexsBuff(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
         backtices = new Vertices(glGraphics, 4, 6, false, true);
         backtices.setVerticesbuff(new float[]{
-                0.0f, 0.0f, 0.0f, 1.0f,
-                1.0f, 0.0f, 1.0f, 1.0f,
-                1.0f, 1.0f, 1.0f, 0.0f,
-                0.0f, 1.0f, 0.0f, 0.0f}, 0, 16);
+                0.0f, 0.0f, 0.0f, 0.0f,
+                0.0f, 1.0f, 0.0f, 1.0f,
+                1.0f, 1.0f, 1.0f, 1.0f,
+                1.0f, 0.0f, 1.0f, 0.0f}, 0, 16);
         backtices.setIndexsBuff(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
     }
 
@@ -99,8 +104,6 @@ public class ExitScreen extends Screen {
     float stepXsmalle = 180.0f;
     private static final int STOP_SCALE = 20;
     private static final float Scale_FACTOR = 3.0f;
-    float x = moveDis.x - roattDis.x;
-    float y = moveDis.y - roattDis.y;
 
     @Override
     public void present(float deltaTime) {
@@ -109,40 +112,40 @@ public class ExitScreen extends Screen {
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
         gl.glMatrixMode(GL10.GL_PROJECTION);
         gl.glLoadIdentity();
-        gl.glOrthof(0, FrumViewWidth, 0, FrumViewHeight, 1, -1);
-
+        gl.glOrthof(0, FrumViewWidth, FrumViewHeight, 0, 1, -1);
+        float x = moveDis.x - roattDis.x;
+        float y = moveDis.y - roattDis.y;
 
         //回退后合住书本
 
         if (stepXsmalle > 0.0f) {
-            if (stepXsmalle == 180.0f) {
-                gl.glPushMatrix();
-                gl.glMatrixMode(GL10.GL_MODELVIEW);
-                gl.glLoadIdentity();
-                texture.bindTexture();
-                gl.glTranslatef(FrumViewWidth*0.1f, 0.0f, 0);
-                gl.glScalef(FrumViewWidth*0.9f, FrumViewHeight, 0.0f);
-                gl.glRotatef(-stepXsmalle, 0, 1, 0);
-                vertices.bind();
-                vertices.draw(GL10.GL_TRIANGLES, 0, vertices.getnumberSize());
-                vertices.unBind();
-                texture.dispose();
-                gl.glPopMatrix();
-
-                gl.glPushMatrix();
-                gl.glMatrixMode(GL10.GL_MODELVIEW);
-                gl.glLoadIdentity();
-                backTexture.bindTexture();
-                gl.glTranslatef(FrumViewWidth*0.1f, 0.0f, 0);
-                gl.glScalef(FrumViewWidth*0.9f, FrumViewHeight, 0.0f);
-                backtices.bind();
-                backtices.draw(GL10.GL_TRIANGLES, 0, backtices.getnumberSize());
-                backtices.unBind();
-                backTexture.dispose();
-                gl.glPopMatrix();
-            }
+//            if (stepXsmalle == 180.0f) {
+//                gl.glPushMatrix();
+//                gl.glMatrixMode(GL10.GL_MODELVIEW);
+//                gl.glLoadIdentity();
+//                texture.bindTexture();
+//                gl.glTranslatef(FrumViewWidth*0.1f, 0.0f, 0);
+//                gl.glScalef(FrumViewWidth*0.9f, FrumViewHeight, 0.0f);
+//                gl.glRotatef(-stepXsmalle, 0, 1, 0);
+//                vertices.bind();
+//                vertices.draw(GL10.GL_TRIANGLES, 0, vertices.getnumberSize());
+//                vertices.unBind();
+//                texture.dispose();
+//                gl.glPopMatrix();
+//
+//                gl.glPushMatrix();
+//                gl.glMatrixMode(GL10.GL_MODELVIEW);
+//                gl.glLoadIdentity();
+//                backTexture.bindTexture();
+//                gl.glTranslatef(FrumViewWidth*0.1f, 0.0f, 0);
+//                gl.glScalef(FrumViewWidth*0.9f, FrumViewHeight, 0.0f);
+//                backtices.bind();
+//                backtices.draw(GL10.GL_TRIANGLES, 0, backtices.getnumberSize());
+//                backtices.unBind();
+//                backTexture.dispose();
+//                gl.glPopMatrix();
+//            }
             if (stepXsmalle <= 60.0f) {
-
                 gl.glPushMatrix();
                 gl.glMatrixMode(GL10.GL_MODELVIEW);
                 gl.glLoadIdentity();
@@ -171,7 +174,7 @@ public class ExitScreen extends Screen {
                 gl.glPopMatrix();
                 stepXsmalle -= 3.0f;
             }
-            if (stepXsmalle >60.0f && stepXsmalle <= 180.0f) {
+            if (stepXsmalle >=60.0f && stepXsmalle <= 180.0f) {
                 gl.glPushMatrix();
                 gl.glMatrixMode(GL10.GL_MODELVIEW);
                 gl.glLoadIdentity();
@@ -198,7 +201,7 @@ public class ExitScreen extends Screen {
                 backtices.unBind();
                 backTexture.dispose();
                 gl.glPopMatrix();
-                k++;
+                k ++;
                 stepXsmalle -= 6.0f;
             }
 
@@ -263,7 +266,10 @@ public class ExitScreen extends Screen {
      */
     public void setEndPostion(float scalex_FACTOR,float scaley_FACTOR) {
         moveDis.x = FrumViewWidth * scalex_FACTOR;
-        moveDis.y = FrumViewHeight * (1-scaley_FACTOR);
+        moveDis.y = FrumViewHeight * (scaley_FACTOR);
+
+
+        LogMes.d("TAGPOS", "=========moveDis.x: " + moveDis.x + "moveDis.y :" + moveDis.y);
     }
 
 
@@ -272,16 +278,24 @@ public class ExitScreen extends Screen {
      * @param screen_FACTOR
      */
 
-    public void setFrum(float screen_FACTOR) {
-        DisplayMetrics metrics = new DisplayMetrics();
-        WindowManager windowManager = (WindowManager) game.getContext().getSystemService(Context.WINDOW_SERVICE);
-        windowManager.getDefaultDisplay().getMetrics(metrics);
-        float screenWidth = metrics.widthPixels;
-        float screenHeight = metrics.heightPixels;
+    private void setFrum(float screen_FACTOR) {
+//        DisplayMetrics metrics = new DisplayMetrics();
+//        WindowManager windowManager = (WindowManager) game.getContext().getSystemService(Context.WINDOW_SERVICE);
+//        windowManager.getDefaultDisplay().getMetrics(metrics);
+//        float screenWidth = metrics.widthPixels;
+//        float screenHeight = metrics.heightPixels;
+        Rect appRect = new Rect();
+        Window window = game.getApplyWindow();
+        window.getDecorView().getWindowVisibleDisplayFrame(appRect);
+        int screenWidth = appRect.width();
+        int screenHeight = appRect.height();
         FrumViewWidth = screenWidth * screen_FACTOR;
         FrumViewHeight = screenHeight * screen_FACTOR;
+        roattDis = new Vector2f(FrumViewWidth*0.083f, 0);
+        moveDis = new Vector2f();
     }
 
+    //设置最终的大小
     public void setEndScale(float viewXScale, float viewYScale) {
         this.viewXScale = viewXScale;
         this.viewYScale = viewYScale;

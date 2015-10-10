@@ -2,7 +2,9 @@ package com.example.zy.girddemo.OpenglAnim.Anim;
 
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.util.DisplayMetrics;
+import android.view.Window;
 import android.view.WindowManager;
 
 import com.example.zy.girddemo.OpenglAnim.BasicElements.Texture;
@@ -41,6 +43,11 @@ public class EnterScreen extends Screen {
     private float viewXScale = 0.3228f;
     private float viewYScale = 0.3206f;
 
+
+
+
+
+
     public EnterScreen(Game game, String filename) {
         super(game);
         glGraphics = game.getGraphics();
@@ -62,17 +69,17 @@ public class EnterScreen extends Screen {
     private void initData() {
         vertices = new Vertices(glGraphics, 4, 6, false, true);
         vertices.setVerticesbuff(new float[]{
-                0.0f, 0.0f, 0.0f, 1.0f,
-                1.0f, 0.0f, 1.0f, 1.0f,
-                1.0f, 1.0f, 1.0f, 0.0f,
-                0.0f, 1.0f, 0.0f, 0.0f}, 0, 16);
+                0.0f, 0.0f, 0.0f, 0.0f,
+                0.0f, 1.0f, 0.0f, 1.0f,
+                1.0f, 1.0f, 1.0f, 1.0f,
+                1.0f, 0.0f, 1.0f, 0.0f}, 0, 16);
         vertices.setIndexsBuff(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
         backtices = new Vertices(glGraphics, 4, 6, false, true);
         backtices.setVerticesbuff(new float[]{
-                0.0f, 0.0f, 0.0f, 1.0f,
-                1.0f, 0.0f, 1.0f, 1.0f,
-                1.0f, 1.0f, 1.0f, 0.0f,
-                0.0f, 1.0f, 0.0f, 0.0f,}, 0, 16);
+                0.0f, 0.0f, 0.0f, 0.0f,
+                0.0f, 1.0f, 0.0f, 1.0f,
+                1.0f, 1.0f, 1.0f, 1.0f,
+                1.0f, 0.0f, 1.0f, 0.0f}, 0, 16);
         backtices.setIndexsBuff(new short[]{0, 1, 2, 2, 3, 0}, 0, 6);
     }
 
@@ -115,11 +122,10 @@ public class EnterScreen extends Screen {
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
         gl.glMatrixMode(GL10.GL_PROJECTION);
         gl.glLoadIdentity();
-        gl.glOrthof(0, FrumViewWidth, 0, FrumViewHeight, 1, -1);
+        gl.glOrthof(0, FrumViewWidth, FrumViewHeight, 0, 1, -1);
         float x = roattDis.x - moveDis.x;
         float y = roattDis.y - moveDis.y;
-        // 移动到指定位置
-        // 移动到指定位置
+
 
         //在给定位置进行打开动作,模拟书本翻页动作
 
@@ -129,8 +135,8 @@ public class EnterScreen extends Screen {
                 gl.glLoadIdentity();
                 backTexture.bindTexture();
                 gl.glTranslatef(moveDis.x + x / STOP_SCALE * k, moveDis.y + y / STOP_SCALE * k, 0);
-                gl.glScalef(FrumViewWidth*viewXScale + FrumViewWidth*(0.92f-viewXScale) / STOP_SCALE * k,
-                        FrumViewHeight*viewYScale + FrumViewHeight*(1.0f-viewYScale) / STOP_SCALE * k, 0.0f);
+                gl.glScalef(FrumViewWidth * viewXScale + FrumViewWidth * (0.92f - viewXScale) / STOP_SCALE * k,
+                        FrumViewHeight * viewYScale + FrumViewHeight * (1.0f - viewYScale) / STOP_SCALE * k, 0.0f);
                 backtices.bind();
                 backtices.draw(GL10.GL_TRIANGLES, 0, backtices.getnumberSize());
                 backtices.unBind();
@@ -143,8 +149,8 @@ public class EnterScreen extends Screen {
                 gl.glLoadIdentity();
                 texture.bindTexture();
                 gl.glTranslatef(moveDis.x + x / STOP_SCALE * k, moveDis.y + y / STOP_SCALE * k, 0);
-                gl.glScalef(FrumViewWidth*viewXScale + FrumViewWidth*(0.92f-viewXScale) / STOP_SCALE * k,
-                        FrumViewHeight*viewYScale + FrumViewHeight*(1.0f-viewYScale) / STOP_SCALE * k, 0.0f);
+                gl.glScalef(FrumViewWidth * viewXScale + FrumViewWidth * (0.92f - viewXScale) / STOP_SCALE * k,
+                        FrumViewHeight * viewYScale + FrumViewHeight * (1.0f - viewYScale) / STOP_SCALE * k, 0.0f);
                 gl.glRotatef(-roateAngle, 0, 1, 0);
                 vertices.bind();
                 vertices.draw(GL10.GL_TRIANGLES, 0, vertices.getnumberSize());
@@ -152,15 +158,16 @@ public class EnterScreen extends Screen {
                 texture.dispose();
                 gl.glPopMatrix();
                 roateAngle += 6f;
+                k++;
             }
-            if (roateAngle >=120.0f) {
+            if (roateAngle >= 120.0f) {
 
                 gl.glMatrixMode(GL10.GL_MODELVIEW);
                 gl.glLoadIdentity();
                 backTexture.bindTexture();
                 gl.glTranslatef(moveDis.x + x / STOP_SCALE * k, moveDis.y + y / STOP_SCALE * k, 0);
-                gl.glScalef(FrumViewWidth*viewXScale + FrumViewWidth*(0.92f-viewXScale) / STOP_SCALE * k,
-                        FrumViewHeight*viewYScale + FrumViewHeight*(1.0f-viewYScale) / STOP_SCALE * k, 0.0f);
+                gl.glScalef(FrumViewWidth * viewXScale + FrumViewWidth * (0.92f - viewXScale) / STOP_SCALE * k,
+                        FrumViewHeight * viewYScale + FrumViewHeight * (1.0f - viewYScale) / STOP_SCALE * k, 0.0f);
                 backtices.bind();
                 backtices.draw(GL10.GL_TRIANGLES, 0, backtices.getnumberSize());
                 backtices.unBind();
@@ -173,8 +180,8 @@ public class EnterScreen extends Screen {
                 gl.glLoadIdentity();
                 texture.bindTexture();
                 gl.glTranslatef(moveDis.x + x / STOP_SCALE * k, moveDis.y + y / STOP_SCALE * k, 0);
-                gl.glScalef(FrumViewWidth*viewXScale + FrumViewWidth*(0.92f-viewXScale) / STOP_SCALE * k,
-                        FrumViewHeight*viewYScale + FrumViewHeight*(1.0f-viewYScale) / STOP_SCALE * k, 0.0f);
+                gl.glScalef(FrumViewWidth * viewXScale + FrumViewWidth * (0.92f - viewXScale) / STOP_SCALE * k,
+                        FrumViewHeight * viewYScale + FrumViewHeight * (1.0f - viewYScale) / STOP_SCALE * k, 0.0f);
                 gl.glRotatef(-roateAngle, 0, 1, 0);
                 vertices.bind();
                 vertices.draw(GL10.GL_TRIANGLES, 0, vertices.getnumberSize());
@@ -183,20 +190,19 @@ public class EnterScreen extends Screen {
                 gl.glPopMatrix();
                 roateAngle += 6f;
             }
-            if (k < 20) {
-                k++;
-            } else {
-                k = 20;
-            }
 
         } else {
             gl.glMatrixMode(GL10.GL_MODELVIEW);
             gl.glLoadIdentity();
-            gl.glColor4f(0.4f,0.6f,0.6f,1);
-            gl.glScalef(FrumViewWidth,FrumViewHeight,0.0f);
-            vertices.bind();
-            vertices.draw(GL10.GL_TRIANGLES,0,vertices.getnumberSize());
-            vertices.unBind();
+            backTexture.bindTexture();
+            gl.glTranslatef(0, 0, 0);
+            gl.glScalef(FrumViewWidth ,
+                    FrumViewHeight , 0.0f);
+            backtices.bind();
+            backtices.draw(GL10.GL_TRIANGLES, 0, backtices.getnumberSize());
+            backtices.unBind();
+            backTexture.dispose();
+            gl.glPopMatrix();
         }
 
 
@@ -218,19 +224,22 @@ public class EnterScreen extends Screen {
 
     }
 
+    //设置开始的位置
     public void setEnterPos(float xScale,float yScale) {
         moveDis.x = FrumViewWidth * xScale;
-        moveDis.y = FrumViewHeight *(1.0f - yScale);
+        moveDis.y = FrumViewHeight *( yScale);
     }
 
-    public void setFrum(float scaleFrum) {
-        DisplayMetrics metrics = new DisplayMetrics();
-        WindowManager windowManager = (WindowManager) game.getContext().getSystemService(Context.WINDOW_SERVICE);
-        windowManager.getDefaultDisplay().getMetrics(metrics);
-        float screenWidth = metrics.widthPixels;
-        float screenHeigt = metrics.heightPixels;
+    //设置屏幕的大小
+    private void setFrum(float scaleFrum) {
+
+        Rect appRect = new Rect();
+        Window window = game.getApplyWindow();
+        window.getDecorView().getWindowVisibleDisplayFrame(appRect);
+        int screenWidth = appRect.width();
+        int screenHeight = appRect.height();
         FrumViewWidth = screenWidth * scaleFrum;
-        FrumViewHeight = screenHeigt * scaleFrum;
-        roattDis = new Vector2f(FrumViewWidth*0.083f, 0.0f);
+        FrumViewHeight = screenHeight * scaleFrum;
+        roattDis = new Vector2f(FrumViewWidth*0.083f, 0);
     }
 }

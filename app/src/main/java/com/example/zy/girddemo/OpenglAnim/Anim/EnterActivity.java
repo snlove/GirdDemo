@@ -14,12 +14,16 @@ import com.example.zy.girddemo.OpenglAnim.OpenglUtil.Screen;
 public class EnterActivity extends BasciScreen {
     private  int imagerPostion;
     private EnterScreen enterScreen;
+    private float[] scale;
+    private float[] firstPos;
     @Override
     public Screen getStartScreen() {
         Intent receiveId = getIntent();
         imagerPostion = receiveId.getExtras().getInt("bookCoverId");
         Bundle b = receiveId.getBundleExtra("Postion");
         float[] postion = b.getFloatArray("PostionScale");
+        scale = b.getFloatArray("ViewScale");
+        firstPos = b.getFloatArray("FirstPostion");
         LogMes.d("BOOKTAG", "=====================" + imagerPostion);
         enterScreen = new EnterScreen(this,imagerPostion);
         enterScreen.setEnterPos(postion[0],postion[1]);
@@ -31,6 +35,8 @@ public class EnterActivity extends BasciScreen {
         if (keyCode==KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
             Intent intent=new Intent();
             intent.putExtra("BookId", imagerPostion);
+            intent.putExtra("Scale",scale);
+            intent.putExtra("FirstPos",firstPos);
             intent.setClass(EnterActivity.this, ExitActivity.class);
             startActivity(intent);
             EnterActivity.this.finish();

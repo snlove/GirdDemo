@@ -8,11 +8,8 @@ import android.opengl.GLSurfaceView.Renderer;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.view.Window;
 
-
-import com.example.zy.girddemo.OpenglAnim.OpenglUtil.BasicUtil.AndroidFileIO;
-import com.example.zy.girddemo.OpenglAnim.OpenglUtil.BasicUtil.AndroidInput;
-import com.example.zy.girddemo.OpenglAnim.OpenglUtil.BasicUtil.FileIO;
 import com.example.zy.girddemo.OpenglAnim.OpenglUtil.GLGraphics;
 import com.example.zy.girddemo.OpenglAnim.OpenglUtil.Game;
 import com.example.zy.girddemo.OpenglAnim.OpenglUtil.Screen;
@@ -32,8 +29,6 @@ public abstract class BasciScreen extends Activity implements Game, Renderer {
 
     GLSurfaceView glView;
     GLGraphics glGraphics;
-    GLGraphics.Input input;
-    FileIO fileIO;
     Screen screen;
     GLState state = GLState.Initialized;
     Object stateChanged = new Object();
@@ -44,9 +39,7 @@ public abstract class BasciScreen extends Activity implements Game, Renderer {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         glView = new GLSurfaceView(this);
 
        // 设置glsurfaceView alpha
@@ -57,8 +50,6 @@ public abstract class BasciScreen extends Activity implements Game, Renderer {
         setContentView(glView);
 
         glGraphics = new GLGraphics(glView);
-        fileIO = new AndroidFileIO(getAssets());
-        input = new AndroidInput(this, glView, 1, 1);
         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "GLGame");
 
@@ -151,15 +142,7 @@ public abstract class BasciScreen extends Activity implements Game, Renderer {
 
 
 
-    @Override
-    public GLGraphics.Input getInput() {
-        return input;
-    }
 
-    @Override
-    public FileIO getFileIO() {
-        return fileIO;
-    }
 
     @Override
     public GLGraphics getGraphics() {
@@ -192,5 +175,8 @@ public abstract class BasciScreen extends Activity implements Game, Renderer {
         return context;
     }
 
-
+    @Override
+    public Window getApplyWindow() {
+        return this.getWindow();
+    }
 }
